@@ -1,4 +1,4 @@
-import { codeNumbers } from "../../helper/constants";
+import { codeNumbers } from "../../lib/constants";
 
 const Code = ({ length, error }) => {
   return (

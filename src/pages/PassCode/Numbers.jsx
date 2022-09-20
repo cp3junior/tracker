@@ -1,4 +1,4 @@
-import { passcodeNumbers } from "../../helper/constants";
+import { passcodeNumbers } from "../../lib/constants";
 
 const Numbers = ({ onChange }) => {
   const handleClick = (e, value) => {

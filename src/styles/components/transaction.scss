@@ -1,0 +1,124 @@
+.transactioncontainer {
+  padding: 20px;
+}
+.transactionItem {
+  background-color: white;
+  color: $black;
+  display: flex;
+  margin-bottom: 10px;
+  border-radius: 13px;
+  padding: 6px;
+  align-items: center;
+
+  &-icon {
+    background-color: $bg-green;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    margin-right: 10px;
+    width: 55px;
+    height: 55px;
+    font-size: 26px;
+  }
+  &-content {
+    display: flex;
+    flex-direction: column;
+    height: 42px;
+    flex: 1;
+    justify-content: space-between;
+    h3 {
+      font-size: 15px;
+      line-height: 20px;
+      font-weight: 700;
+      margin: 0;
+    }
+    p {
+      color: $darkgrey;
+      font-size: 12px;
+      font-weight: 300;
+      line-height: 18px;
+    }
+  }
+  &-price {
+    h2 {
+      font-size: 15px;
+      margin-right: 8px;
+      font-weight: 600;
+      text-align: right;
+    }
+    p {
+      color: $vividgreen;
+      font-size: 11px;
+      font-weight: 400;
+      line-height: 18px;
+      text-align: right;
+      margin-right: 8px;
+    }
+  }
+}
+.transactionfilteroverlay {
+  position: absolute;
+  z-index: 40;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: #00000045;
+}
+
+.transactionfilter {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  background-color: white;
+  height: 100vh;
+  left: 100px;
+  z-index: 50;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  transition: all ease-in-out 0.3s;
+
+  &.hidden {
+    left: $max;
+  }
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    button {
+      width: 30px;
+      background-color: transparent;
+      border: none;
+      transform: rotate(45deg);
+    }
+    h3 {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 21px;
+      color: $black;
+    }
+  }
+  &-content {
+    padding: 15px;
+    &-form {
+      margin-bottom: 10px;
+      input {
+        width: 100%;
+      }
+    }
+    button {
+      background-color: $blue;
+      border: none;
+      color: white;
+      text-transform: uppercase;
+      text-align: center;
+      width: 100%;
+      border-radius: 5px;
+      margin-top: 5px;
+      padding: 8px;
+    }
+  }
+}

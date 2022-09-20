@@ -1,7 +1,7 @@
 import React from "react";
 
 const FallBack = () => {
-  return <div>FallBack</div>;
+  return <div>Loading</div>;
 };
 
 export default FallBack;

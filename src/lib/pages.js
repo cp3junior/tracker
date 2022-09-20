@@ -1,6 +1,6 @@
 import { ReactComponent as HomeIcon } from "../assets/icons/home.svg";
 import { ReactComponent as BillsIcon } from "../assets/icons/bills.svg";
-import { ReactComponent as SummaryIcon } from "../assets/icons/summary.svg";
+// import { ReactComponent as SummaryIcon } from "../assets/icons/summary.svg";
 import { ReactComponent as TransactionsIcon } from "../assets/icons/transactions.svg";
 
 const pages = [
@@ -18,16 +18,16 @@ const pages = [
   },
   {
     id: 3,
-    title: "Summary",
-    path: "/summary",
-    icon: <SummaryIcon />,
-  },
-  {
-    id: 4,
     title: "Transactions",
     path: "/transactions",
     icon: <TransactionsIcon />,
   },
+  // {
+  //   id: 4,
+  //   title: "Summary",
+  //   path: "/summary",
+  //   icon: <SummaryIcon />,
+  // },
 ];
 
 export default pages;

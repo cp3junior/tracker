@@ -1,10 +1,18 @@
 import React from "react";
 
 import { Link, useLocation } from "react-router-dom";
-import pages from "../../helper/pages";
+import pages from "../lib/pages";
 
 const Navigation = () => {
   const { pathname } = useLocation();
+
+  const getActive = (path) => {
+    if (path.includes(pathname)) {
+      if (pathname === "/" && path === "/") return true;
+      if (pathname !== "/") return true;
+    }
+    return false;
+  };
 
   return (
     <div className="navigation">
@@ -13,8 +21,8 @@ const Navigation = () => {
           <div
             key={page.id}
             className={`${
-              pathname === page.path ? "active" : ""
-            } navigation-item`}
+              getActive(page.path) ? "active" : ""
+            } navigation-container-item`}
           >
             <Link to={page.path}>
               {page.icon}

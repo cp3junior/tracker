@@ -1,15 +1,17 @@
 import { Suspense, lazy, useContext, useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-import Layout from "./pages/Layout";
-import Home from "./pages/Home/Home";
+import Layout from "./Layout/Layout";
+import Home from "./pages/Home";
 import PassCode from "./pages/PassCode/PassCode";
 import FallBack from "./components/FallBack";
 import AuthContext from "./context/AuthContext";
 
-const Bills = lazy(() => import("./pages/Bills/Bills"));
-const Summary = lazy(() => import("./pages/Summary/Summary"));
-const Transactions = lazy(() => import("./pages/Transactions/Transactions"));
+const Bills = lazy(() => import("./pages/Bills"));
+const Summary = lazy(() => import("./pages/Summary"));
+const Transactions = lazy(() => import("./pages/Transactions"));
+const TransactionsDetail = lazy(() => import("./pages/TransactionsDetail"));
+const BillsDetail = lazy(() => import("./pages/BillsDetail"));
 
 const App = () => {
   const { isConnected, disconnect } = useContext(AuthContext);
@@ -35,6 +37,14 @@ const App = () => {
             }
           />
           <Route
+            path="bill"
+            element={
+              <Suspense fallback={<FallBack />}>
+                <BillsDetail />
+              </Suspense>
+            }
+          />
+          <Route
             path="summary"
             element={
               <Suspense fallback={<FallBack />}>
@@ -47,6 +57,14 @@ const App = () => {
             element={
               <Suspense fallback={<FallBack />}>
                 <Transactions />
+              </Suspense>
+            }
+          />
+          <Route
+            path="transaction"
+            element={
+              <Suspense fallback={<FallBack />}>
+                <TransactionsDetail />
               </Suspense>
             }
           />

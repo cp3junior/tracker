@@ -3,234 +3,81 @@
 @import "./variables";
 
 .app {
-  max-width: 500px;
+  max-width: $max;
   flex: 1;
   background-color: $bg-gray;
   padding-bottom: 100px;
-  &-container {
-    padding: 15px;
-  }
 
-  .navigation {
-    position: fixed;
-    height: 100px;
-    bottom: 0;
-    width: 100%;
-    padding: 15px;
-    max-width: 500px;
-    .navigation-container {
-      height: 100%;
-      border-radius: $cardRadius;
-      -webkit-backdrop-filter: blur(10px);
-      background-color: #ffffff7d;
-      padding: 5px;
-      box-shadow: 0 10px 15px rgb(0 0 0 / 20%);
-      box-sizing: border-box;
-      color: rgba(0, 0, 0, 0.8);
-      backdrop-filter: blur(10px);
-      background-blend-mode: overlay;
-      display: flex;
-      align-items: center;
-
-      .navigation-item {
-        flex: 1;
-        height: 100%;
-        display: flex;
-        padding: 5px;
-        transition: all 0.2s ease;
-
-        a {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex: 1;
-
-          svg {
-            width: $iconSize;
-            height: $iconSize;
-            fill: $black;
-          }
-          span {
-            display: none;
-            font-size: 11px;
-            font-weight: 700;
-            color: white;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-        }
-
-        &.active {
-          flex: 2;
-          background-color: $black;
-          border-radius: 20px;
-
-          a {
-            justify-content: flex-start;
-
-            svg {
-              margin-right: 10px;
-              fill: $blue;
-            }
-
-            span {
-              display: block;
-            }
-          }
-        }
-      }
-    }
-  }
   .page {
     display: flex;
     flex-direction: column;
-  }
-  .hometotal {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    margin-bottom: 40px;
-  }
-  .multicard-container {
-    display: flex;
-    flex: 1;
-  }
-  .card-container {
-    display: flex;
-    flex: 1;
-    padding: 10px 5px;
-  }
-
-  .card {
-    border-radius: $cardRadius;
-    background-color: $white;
-    display: flex;
-    flex: 1;
-    box-shadow: 0 10px 15px rgb(0 0 0 / 20%);
-    box-sizing: border-box;
-    padding: 20px;
-    flex-direction: column;
-  }
-}
-.passcode {
-  max-width: 500px;
-  display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: 40px;
-  background-color: $darkgreen;
-  &-top {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    padding: 20px;
-    align-items: center;
-    &-text {
-      text-align: center;
-      color: $white;
-      font-size: 16px;
-      font-weight: 600;
+    position: relative;
+    &.green {
+      background-color: $bg-green;
     }
-    &-code {
+
+    .subpage {
+      background-color: white;
+      padding: 30px 20px 20px 20px;
+      border-radius: 32px 32px 0 0;
+      &.gray {
+        background-color: $bg-gray;
+      }
+      &.green {
+        background-color: $bg-green;
+      }
+      &.under {
+        margin-top: -30px;
+      }
+      &.hasunder {
+        padding-bottom: 40px;
+      }
+    }
+    .title {
       display: flex;
-      flex: 1;
-      width: 100%;
-      justify-content: space-evenly;
+      justify-content: space-between;
       align-items: center;
-      padding: 8px 0;
-
-      &.error {
-        animation: shake 0.82s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
-        transform: translate3d(0, 0, 0);
-        backface-visibility: hidden;
-        perspective: 1000px;
+      margin-bottom: 15px;
+      h2 {
+        font-size: 18px;
+        font-weight: 700;
+        line-height: 26px;
+        color: $black;
       }
-
-      &-item {
-        width: $CodeSize;
-        height: $CodeSize;
-        border-radius: 50%;
-        border: 2px solid $white;
-
-        &.active {
-          background: $white;
-        }
+      a {
+        color: rgba(0, 0, 0, 0.6);
+        font-size: 14px;
+        font-weight: 600;
+        line-height: 20px;
+        color: $blue;
       }
-
-      @keyframes shake {
-        10%,
-        90% {
-          transform: translate3d(-1px, 0, 0);
-        }
-
-        20%,
-        80% {
-          transform: translate3d(2px, 0, 0);
-        }
-
-        30%,
-        50%,
-        70% {
-          transform: translate3d(-4px, 0, 0);
-        }
-
-        40%,
-        60% {
-          transform: translate3d(4px, 0, 0);
-        }
+      button {
+        background-color: transparent;
+        border: none;
+        width: 40px;
+        padding: 0px 10px;
       }
     }
   }
-  &-middle {
-    display: flex;
-    flex: 5;
-    &-numbers {
-      display: flex;
-      flex-direction: row;
-      flex-wrap: wrap;
-      width: 100%;
+  .addBtn {
+    position: fixed;
+    bottom: 95px;
+    z-index: 20;
+    right: 15px;
 
-      &-buttons {
-        flex: 33.33%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        &-button {
-          color: $white;
-          border: none;
-          padding: 0;
-          width: $btnPasscodeSize;
-          height: $btnPasscodeSize;
-          background: $greenishgrey;
-          border-radius: 50%;
-          font-size: 40px;
-          font-weight: bolder;
-
-          &:active {
-            background: $lightengrey;
-          }
-        }
-      }
-    }
-  }
-  &-bottom {
-    display: flex;
-    flex: 1;
-    justify-content: flex-end;
-    &-container {
-      display: flex;
-      align-items: flex-end;
-    }
-    &-button {
-      color: $white;
-      background-color: transparent;
-      border: none;
-      padding: 0;
-
-      &:active {
-        color: $grey;
-      }
+    &-btn {
+      background-color: $yellow;
+      border: 3px solid $white;
+      box-shadow: 0px 0px 14px -4px #403e3ea6;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
     }
   }
 }
+
+@import "./components/navigation.scss";
+@import "./components/passcode.scss";
+@import "./components/home.scss";
+@import "./components/transaction.scss";
+@import "./components/bills.scss";
