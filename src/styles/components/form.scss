@@ -1,0 +1,129 @@
+.form {
+  padding: 15px;
+  &-item {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+    label {
+      font-size: 14px;
+      line-height: 24px;
+      font-weight: 600;
+      color: $black;
+    }
+    input,
+    textarea {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.029);
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 8px 10px;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 600;
+      transition: all 0.3s ease-in-out;
+
+      &:focus {
+        border-color: $yellow;
+        border-radius: 5px 5px 0 0;
+      }
+    }
+    select {
+      width: 100%;
+      background-color: rgba(0, 0, 0, 0.029);
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 8px 10px;
+      border-radius: 5px;
+      font-size: 15px;
+      font-weight: 600;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      text-indent: 1px;
+      text-overflow: "";
+
+      &::-ms-expand {
+        display: none;
+      }
+      &:focus {
+        border-color: $yellow;
+        border-radius: 5px 5px 0 0;
+      }
+    }
+
+    &-category {
+      position: relative;
+      display: flex;
+      gap: 10px;
+      select {
+        flex: 1;
+        option {
+          span {
+            margin-right: 10px;
+          }
+        }
+      }
+      &-addbtn {
+        width: 40px;
+        border: none;
+        border-radius: 5px;
+        background-color: $yellow;
+        svg {
+          path {
+            stroke: rgba(0, 0, 0, 0.7);
+          }
+        }
+      }
+    }
+  }
+  &-submit {
+    background-color: $blue;
+    color: $white;
+    width: 100%;
+    border: none;
+    border-radius: 5px;
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: 500;
+    padding: 7px 0;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+  }
+  &-buttons {
+    display: flex;
+    gap: 10px;
+    &-delete {
+      margin: 10px auto;
+      width: 100%;
+      border: none;
+      background-color: $vividred;
+      padding: 7px 0;
+      text-align: center;
+      text-transform: uppercase;
+      display: block;
+      border-radius: 5px;
+      color: $white;
+      font-size: 16px;
+      font-weight: 600;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      &.small {
+        font-size: 12px;
+        width: 30%;
+        padding: 5px 0;
+      }
+    }
+    &-back {
+      display: block;
+      background-color: rgba(0, 0, 0, 0.35);
+      color: $white;
+      width: 100%;
+      border: none;
+      border-radius: 5px;
+      margin: 10px 0;
+      font-size: 16px;
+      font-weight: 500;
+      padding: 7px 0;
+      text-align: center;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+    }
+  }
+}

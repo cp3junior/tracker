@@ -97,9 +97,10 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -webkit-text-size-adjust: 100%; /* 2 */
-  font-family: "Wotfard", -apple-system, sans-serif;
+  font-family: "PlusJakartaSans", -apple-system, sans-serif;
   font-weight: normal;
   font-style: normal;
+  color: $black;
 }
 
 #root {
@@ -132,6 +133,9 @@ h4,
 h5,
 h6 {
   overflow-wrap: break-word;
+  &:empty {
+    display: none;
+  }
 }
 
 #root,

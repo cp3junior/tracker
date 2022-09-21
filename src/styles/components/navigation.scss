@@ -37,10 +37,9 @@
         svg {
           width: $iconSize;
           height: $iconSize;
-          path {
-            stroke: $darkgreen2;
-          }
-          rect {
+          path,
+          rect,
+          circle {
             stroke: $darkgreen2;
           }
         }
@@ -65,10 +64,9 @@
 
           svg {
             margin-right: 10px;
-            path {
-              stroke: $yellow;
-            }
-            rect {
+            path,
+            rect,
+            circle {
               stroke: $yellow;
             }
           }

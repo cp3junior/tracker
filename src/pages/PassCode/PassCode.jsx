@@ -3,9 +3,11 @@ import { useState, useEffect, useContext } from "react";
 import Code from "./Code";
 import Numbers from "./Numbers";
 import AuthContext from "../../context/AuthContext";
+import DataContext from "../../context/DataContext";
 
 const PassCode = () => {
-  const { checkPasscode, connect } = useContext(AuthContext);
+  const { checkPasscode } = useContext(AuthContext);
+  const { users } = useContext(DataContext);
   const [passCode, setpassCode] = useState([]);
   const [hasError, setHasError] = useState(false);
 
@@ -16,9 +18,8 @@ const PassCode = () => {
 
     if (passCode.length === 6) {
       const stringPasscode = passCode.join("");
-      const isOK = checkPasscode(stringPasscode);
-      if (isOK) connect();
-      else {
+      const isOK = checkPasscode(stringPasscode, users);
+      if (!isOK) {
         setHasError(true);
         setpassCode([]);
       }
@@ -38,7 +39,7 @@ const PassCode = () => {
   return (
     <div className="passcode">
       <div className="passcode-top">
-        <h3 className="passcode-top-text">Enter Passcode</h3>
+        <h3 className="passcode-top-text">Enter passcode</h3>
         <Code length={passCode.length} error={hasError} />
       </div>
       <div className="passcode-middle">

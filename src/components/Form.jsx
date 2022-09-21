@@ -1,0 +1,51 @@
+import React from "react";
+import { Link } from "react-router-dom";
+import FormItem from "./FormItem";
+import Loader from "./Loader";
+
+const Form = ({
+  onSubmit,
+  onChange,
+  formShape = [],
+  formData = {},
+  isSubmiting = false,
+  isEditing = false,
+  hasReturn = false,
+  returnLink = "",
+  sizeDelete = "",
+  onDelete = () => {},
+}) => {
+  return (
+    <form className="form" onSubmit={onSubmit}>
+      {formShape.map((form) => (
+        <FormItem
+          key={form.id}
+          data={form}
+          formData={formData}
+          onChange={onChange}
+        />
+      ))}
+      <button type="submit" disabled={isSubmiting} className="form-submit">
+        {isSubmiting ? <Loader size="small" /> : "Save"}
+      </button>
+      <div className="form-buttons">
+        {hasReturn && (
+          <Link className="form-buttons-back" to={returnLink}>
+            Cancel
+          </Link>
+        )}
+        {isEditing && (
+          <button
+            type="button"
+            className={`form-buttons-delete ${sizeDelete}`}
+            onClick={onDelete}
+          >
+            Delete
+          </button>
+        )}
+      </div>
+    </form>
+  );
+};
+
+export default Form;

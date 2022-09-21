@@ -1,7 +1,7 @@
 .cardcontainer {
   border-radius: 0 !important;
 
-  .addbill {
+  .addlinkbtn {
     background-color: $blue;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -24,11 +24,11 @@
         }
       }
       span {
-        font-size: 16px;
+        font-size: 17px;
         text-transform: uppercase;
-        line-height: 26px;
-        margin-top: 3px;
-        font-weight: 500;
+        line-height: 30px;
+
+        font-weight: 600;
       }
     }
   }

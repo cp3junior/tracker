@@ -8,8 +8,8 @@
   &-text {
     h1 {
       text-align: center;
-      font-size: 25px;
-      font-weight: 600;
+      font-size: 24px;
+      font-weight: 700;
       line-height: 30px;
     }
   }
@@ -28,12 +28,19 @@
     position: relative;
     margin-bottom: 10px;
 
+    &.black {
+      background-color: $bg-black;
+    }
+    &.green {
+      background-color: $green;
+    }
+
     &-text {
       z-index: 2;
       p {
-        font-size: 15px;
+        font-size: 14px;
         line-height: 20px;
-        font-weight: 300;
+        font-weight: 200;
         color: rgba(255, 255, 255, 0.7);
         margin-bottom: 10px;
       }
@@ -52,14 +59,14 @@
     }
 
     a {
-      font-size: 15px;
+      font-size: 14px;
       line-height: 20px;
       font-weight: 500;
       color: white;
     }
   }
   &-small {
-    background-color: $darkgreen;
+    background-color: $bg-black;
     border-radius: 15px;
     display: flex;
     flex-direction: column;
@@ -97,26 +104,26 @@
       }
     }
     p {
-      font-size: 12px;
+      font-size: 11px;
       line-height: 18px;
-      font-weight: 300;
+      font-weight: 200;
       color: rgba(255, 255, 255, 0.7);
-      margin-top: 8px;
+      margin-top: 10px;
       margin-bottom: 5px;
       text-align: center;
     }
     h2 {
       line-height: 24px;
-      font-size: 20px;
-      font-weight: 600;
+      font-size: 19px;
+      font-weight: 700;
       color: white;
       text-align: center;
-      margin-bottom: 8px;
+      margin-bottom: 10px;
     }
     &-container {
       display: flex;
       justify-content: space-between;
-      padding: 9px 15px;
+      padding: 10px 15px;
       align-items: center;
     }
     &-separation {
@@ -136,7 +143,7 @@
             stroke: $vividgreen;
           }
         }
-        &.red {
+        &.up {
           svg {
             transform: rotate(180deg);
             path {
@@ -146,6 +153,7 @@
         }
       }
       &-content {
+        flex: 1;
         p {
           text-align: left;
           color: $grey;
@@ -153,9 +161,23 @@
         }
         h2 {
           text-align: left;
-          font-size: 16px;
+          font-size: 15px;
           margin: 0;
-          font-weight: 500;
+          font-weight: 700;
+        }
+      }
+
+      &.mirror {
+        .homecard-small-mini-icon {
+          margin-right: 0;
+          margin-left: 6px;
+          order: 2;
+        }
+        .homecard-small-mini-content {
+          p,
+          h2 {
+            text-align: right;
+          }
         }
       }
     }

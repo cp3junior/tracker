@@ -7,9 +7,9 @@ const Navigation = () => {
   const { pathname } = useLocation();
 
   const getActive = (path) => {
-    if (path.includes(pathname)) {
+    if (pathname.includes(path)) {
       if (pathname === "/" && path === "/") return true;
-      if (pathname !== "/") return true;
+      if (pathname !== "/" && path !== "/") return true;
     }
     return false;
   };

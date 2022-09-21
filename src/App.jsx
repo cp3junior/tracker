@@ -6,15 +6,21 @@ import Home from "./pages/Home";
 import PassCode from "./pages/PassCode/PassCode";
 import FallBack from "./components/FallBack";
 import AuthContext from "./context/AuthContext";
+import DataContext from "./context/DataContext";
 
 const Bills = lazy(() => import("./pages/Bills"));
-const Summary = lazy(() => import("./pages/Summary"));
+const BillsDetail = lazy(() => import("./pages/BillsDetail"));
+const BillsManage = lazy(() => import("./pages/BillsManage"));
+const Whishlist = lazy(() => import("./pages/Whishlist"));
+const WhishlistDetail = lazy(() => import("./pages/WhishlistDetail"));
+const WhishlistManage = lazy(() => import("./pages/WhishlistManage"));
 const Transactions = lazy(() => import("./pages/Transactions"));
 const TransactionsDetail = lazy(() => import("./pages/TransactionsDetail"));
-const BillsDetail = lazy(() => import("./pages/BillsDetail"));
+const User = lazy(() => import("./pages/User"));
 
 const App = () => {
   const { isConnected, disconnect } = useContext(AuthContext);
+  const { appLoading } = useContext(DataContext);
 
   useEffect(() => {
     return () => {
@@ -23,13 +29,15 @@ const App = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return isConnected ? (
+  return appLoading ? (
+    <FallBack />
+  ) : isConnected ? (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route
-            path="bills"
+            path="bill"
             element={
               <Suspense fallback={<FallBack />}>
                 <Bills />
@@ -37,7 +45,15 @@ const App = () => {
             }
           />
           <Route
-            path="bill"
+            path="bill/:id"
+            element={
+              <Suspense fallback={<FallBack />}>
+                <BillsManage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="bill/:id/view"
             element={
               <Suspense fallback={<FallBack />}>
                 <BillsDetail />
@@ -45,18 +61,26 @@ const App = () => {
             }
           />
           <Route
-            path="summary"
+            path="whishlist"
             element={
               <Suspense fallback={<FallBack />}>
-                <Summary />
+                <Whishlist />
               </Suspense>
             }
           />
           <Route
-            path="transactions"
+            path="whishlist/:id"
             element={
               <Suspense fallback={<FallBack />}>
-                <Transactions />
+                <WhishlistManage />
+              </Suspense>
+            }
+          />
+          <Route
+            path="whishlist/:id/view"
+            element={
+              <Suspense fallback={<FallBack />}>
+                <WhishlistDetail />
               </Suspense>
             }
           />
@@ -64,7 +88,23 @@ const App = () => {
             path="transaction"
             element={
               <Suspense fallback={<FallBack />}>
+                <Transactions />
+              </Suspense>
+            }
+          />
+          <Route
+            path="transaction/:id"
+            element={
+              <Suspense fallback={<FallBack />}>
                 <TransactionsDetail />
+              </Suspense>
+            }
+          />
+          <Route
+            path="users"
+            element={
+              <Suspense fallback={<FallBack />}>
+                <User />
               </Suspense>
             }
           />
