@@ -11,6 +11,7 @@ import Form from "../components/Form";
 import AuthContext from "../context/AuthContext";
 import DataContext from "../context/DataContext";
 import {
+  getBalanceRef,
   getTransactionRef,
   getWhishlistRef,
   transactionsCollection,
@@ -70,8 +71,16 @@ const TransactionsManage = () => {
   const [isSubmiting, setIsSubmiting] = useState(false);
 
   const { userConnected } = useContext(AuthContext);
-  const { transactions, updateTransactions, whishlists, updateWhishlists } =
-    useContext(DataContext);
+  const {
+    transactions,
+    updateTransactions,
+    whishlists,
+    updateWhishlists,
+    homeTransactions,
+    updateHomeTransactions,
+    balance,
+    updateBalance,
+  } = useContext(DataContext);
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -145,7 +154,15 @@ const TransactionsManage = () => {
           if (tran.id === id) return { ...tran, ...formData };
           return tran;
         });
+
         updateTransactions(newTransactions);
+
+        const newHomeTransactions = homeTransactions.map((tran) => {
+          if (tran.id === id) return { ...tran, ...formData };
+          return tran;
+        });
+        updateHomeTransactions(newHomeTransactions);
+
         navigate(`/transaction/${id}/view`);
       } catch (e) {
         setIsSubmiting(false);
@@ -163,6 +180,26 @@ const TransactionsManage = () => {
           ...transactions,
         ];
         updateTransactions(newTransactions);
+
+        const newHomeTransactions = [
+          { id: transactionRef.id, ...formData },
+          ...homeTransactions,
+        ];
+        updateHomeTransactions(newHomeTransactions);
+
+        // Update Balance
+        const oldPrice = parseInt(balance?.price || 0, 10);
+        const thePrice = parseInt(formData?.price || 0, 10);
+        let newPrice;
+
+        if (formData.type === "in") newPrice = oldPrice + thePrice;
+        else newPrice = oldPrice - thePrice;
+        const newBalance = { oldPrice, price: newPrice };
+
+        const balanceRef = await getBalanceRef();
+        await updateDoc(balanceRef, newBalance);
+
+        updateBalance(newBalance);
 
         // delete from whishlist
         if (state?.whishlist) {
@@ -199,25 +236,6 @@ const TransactionsManage = () => {
     setFormData((oldData) => ({ ...oldData, type }));
   };
 
-  const handleDelete = async (e) => {
-    e.preventDefault();
-
-    setIsSubmiting(true);
-    try {
-      const currentTransactionRef = await getTransactionRef(id);
-      await deleteDoc(currentTransactionRef);
-      setIsSubmiting(false);
-
-      const newTransactions = transactions.filter((tran) => tran.id !== id);
-      updateTransactions(newTransactions);
-      navigate("/transaction");
-    } catch (e) {
-      setIsSubmiting(false);
-      alert("An error occured!");
-      console.error("Error adding document: ", e);
-    }
-  };
-
   return (
     <div className="page">
       <div className="whishlist">
@@ -227,7 +245,6 @@ const TransactionsManage = () => {
           returnLink={`/transaction${id === "add" ? "" : `/${id}/view`}`}
           formShape={formShape}
           formData={formData}
-          onDelete={handleDelete}
           onChange={handleChange}
           onSubmit={handleSubmit}
           isEditing={isEditing}

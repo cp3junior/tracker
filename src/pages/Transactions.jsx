@@ -1,39 +1,86 @@
 import { useContext, useEffect, useState } from "react";
 import TransactionItem from "../components/TransactionItem";
 import { ReactComponent as FilterIcon } from "../assets/icons/filter.svg";
-import { ReactComponent as AddIcon } from "../assets/icons/add.svg";
 import DataContext from "../context/DataContext";
-import { getTransactionsPage } from "../db/collections";
 import Loader from "../components/Loader";
+import TransactionFilter from "../components/TransactionFilter";
+import {
+  getTransactionsFiltered,
+  getTransactionsPage,
+} from "../db/collections";
+import { getDataFromSnapshot } from "../lib/functions";
 
 const Transactions = () => {
   const [show, setShow] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [noMoreData, setNoMoreData] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isLoading] = useState(false);
 
-  const { transactions, updateTransactions } = useContext(DataContext);
+  const {
+    hasFilter,
+    filters,
+    transactions,
+    updateTransactions,
+    snapTransaction,
+    updateSnapTransaction,
+  } = useContext(DataContext);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
+    const snapDocs = snapTransaction?.docs?.length || 0;
 
-      const data = await getTransactionsPage();
-      if (data.length > 0) {
-        updateTransactions(data);
-      }
-      setIsLoading(false);
-    };
-
-    if (transactions.length === 0) fetchData();
-  }, [transactions, updateTransactions]);
+    if (snapDocs < 1) {
+      setNoMoreData(true);
+    } else {
+      setNoMoreData(false);
+    }
+  }, [snapTransaction]);
 
   const showFilter = (e) => {
     e.preventDefault();
+    if (document) {
+      document.body.style.overflow = "hidden";
+    }
     setShow(true);
   };
 
-  const hideFilter = (e) => {
-    e.preventDefault();
+  const hideFilter = () => {
+    if (document) {
+      document.body.style.overflow = "scroll";
+    }
     setShow(false);
+  };
+
+  const loadMoreData = async (e) => {
+    e.preventDefault();
+    setIsFetching(true);
+
+    let newSnapshot;
+    if (hasFilter) {
+      newSnapshot = await getTransactionsFiltered(
+        filters?.order,
+        filters?.category,
+        filters?.period,
+        snapTransaction
+      );
+    } else {
+      newSnapshot = await getTransactionsPage(snapTransaction);
+    }
+    updateSnapTransaction(newSnapshot);
+
+    if (!newSnapshot.empty) {
+      const data = getDataFromSnapshot(newSnapshot);
+      if (data.length > 0) {
+        const newTransactions = [...transactions, ...data];
+        updateTransactions(newTransactions);
+        setIsFetching(false);
+      } else {
+        setIsFetching(false);
+        setNoMoreData(true);
+      }
+    } else {
+      setIsFetching(false);
+      setNoMoreData(true);
+    }
   };
 
   return (
@@ -50,18 +97,27 @@ const Transactions = () => {
             <Loader />
           </div>
         ) : transactions.length > 0 ? (
-          transactions.map((item) => (
-            <TransactionItem
-              key={item.id}
-              price={item?.price}
-              title={item?.title}
-              date={item?.date}
-              category={item?.category}
-              transactionType={item?.type}
-              link={`/transaction/${item.id}/view`}
-              isTransaction
-            />
-          ))
+          <>
+            {transactions.map((item) => (
+              <TransactionItem
+                key={item.id}
+                price={item?.price}
+                title={item?.title}
+                date={item?.date}
+                category={item?.category}
+                transactionType={item?.type}
+                link={`/transaction/${item.id}/view`}
+                isTransaction
+              />
+            ))}
+            {!noMoreData && (
+              <div className="loadmorebtn">
+                <button type="button" onClick={loadMoreData}>
+                  {isFetching ? <Loader size="small" /> : "Load more"}
+                </button>
+              </div>
+            )}
+          </>
         ) : (
           <div className="nodata">
             <p>No Data</p>
@@ -69,25 +125,7 @@ const Transactions = () => {
         )}
       </div>
 
-      {/* Filter */}
-      {show && (
-        <div className="transactionfilteroverlay" onClick={hideFilter} />
-      )}
-      <div className={`transactionfilter ${show ? "" : "hidden"}`}>
-        <div className="transactionfilter-header">
-          <button type="submit" onClick={hideFilter}>
-            <AddIcon />
-          </button>
-          <h3>Filters</h3>
-        </div>
-        <div className="transactionfilter-content">
-          <div className="transactionfilter-content-form">
-            <label htmlFor="category">Categories</label>
-            <input type="text" name="category" />
-          </div>
-          <button type="submit">Filter</button>
-        </div>
-      </div>
+      <TransactionFilter hideFilter={hideFilter} show={show} />
     </div>
   );
 };

@@ -1,21 +1,12 @@
 import moment from "moment";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 import DataContext from "../context/DataContext";
-import { getBalance } from "../db/collections";
 import { formatNumber } from "../lib/functions";
 import BigCard from "./BigCard";
 import MiniCard from "./MiniCard";
 
 const HomeCards = ({ month = "" }) => {
-  const { homeTransactions, updateBalance, balance } = useContext(DataContext);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const newBalance = await getBalance();
-      updateBalance(newBalance);
-    };
-    if (!balance) fetchData();
-  }, [balance, updateBalance]);
+  const { homeTransactions, balance } = useContext(DataContext);
 
   const incomes = homeTransactions.filter((tra) => tra.type === "in");
   const expenses = homeTransactions.filter((tra) => tra.type === "out");

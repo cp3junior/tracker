@@ -1,6 +1,12 @@
 import { createContext, useState, useEffect } from "react";
 import { getDocs } from "firebase/firestore";
-import { categoriesCollection, usersCollection } from "../db/collections";
+import {
+  categoriesCollection,
+  getBalance,
+  getTransactionsMonth,
+  getTransactionsPage,
+  usersCollection,
+} from "../db/collections";
 import { getDataFromSnapshot } from "../lib/functions";
 import { CATEGORIES_KEY, USERS_KEY, DATE_KEY } from "../lib/constants";
 import moment from "moment";
@@ -14,11 +20,15 @@ export const DataContextProvider = ({ children }) => {
   const [bills, setBills] = useState([]);
   const [transactions, setTransactions] = useState([]);
   const [homeTransactions, setHomeTransactions] = useState([]);
+  const [snapTransaction, setSnapTransaction] = useState(null);
   const [balance, setBalance] = useState(null);
+  const [hasFilter, setHasFilter] = useState(false);
   const [appLoading, setAppLoading] = useState(false);
+  const [filters, setFilters] = useState(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
+      setAppLoading(true);
       const usersSnapshot = await getDocs(usersCollection);
       if (!usersSnapshot.empty) {
         const usersData = getDataFromSnapshot(usersSnapshot);
@@ -27,11 +37,8 @@ export const DataContextProvider = ({ children }) => {
       } else {
         window.localStorage.setItem(USERS_KEY, null);
       }
+      setAppLoading(false);
     };
-
-    // set date
-    let dateStamp = window.localStorage.getItem(DATE_KEY);
-    if (!dateStamp) window.localStorage.setItem(DATE_KEY, Date());
 
     const fetchCategories = async () => {
       const categoriesSnapshot = await getDocs(categoriesCollection);
@@ -47,7 +54,32 @@ export const DataContextProvider = ({ children }) => {
       }
     };
 
-    setAppLoading(true);
+    const fetchTransactions = async () => {
+      const transactionSnapshot = await getTransactionsPage();
+      setSnapTransaction(transactionSnapshot);
+
+      if (!transactionSnapshot.empty) {
+        const data = getDataFromSnapshot(transactionSnapshot);
+        if (data.length > 0) {
+          setTransactions(data);
+        }
+      }
+    };
+
+    const fetchHomedata = async () => {
+      setAppLoading(true);
+      const data = await getTransactionsMonth();
+      const newBalance = await getBalance();
+      if (data.length > 0) {
+        setHomeTransactions(data);
+      }
+      setBalance(newBalance);
+      setAppLoading(false);
+    };
+
+    // set date
+    let dateStamp = window.localStorage.getItem(DATE_KEY);
+    if (!dateStamp) window.localStorage.setItem(DATE_KEY, Date());
 
     if (users.length === 0) {
       const localUsersString = window.localStorage.getItem(USERS_KEY);
@@ -63,12 +95,13 @@ export const DataContextProvider = ({ children }) => {
         fetchUsers();
       }
     }
+
     if (categories.length === 0) {
       dateStamp = window.localStorage.getItem(DATE_KEY);
 
       const diff =
         moment().diff(moment(new Date(dateStamp || "")), "hour") || 0;
-      if (diff > 6) {
+      if (diff > 3) {
         window.localStorage.setItem(DATE_KEY, Date());
         fetchCategories();
       } else {
@@ -87,8 +120,17 @@ export const DataContextProvider = ({ children }) => {
         }
       }
     }
-    setAppLoading(false);
-  }, [users, categories]);
+
+    if (transactions.length === 0) {
+      fetchTransactions();
+    }
+
+    if (homeTransactions.length === 0) {
+      fetchHomedata();
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // !Adders
   const addUser = (user) => {
@@ -151,10 +193,21 @@ export const DataContextProvider = ({ children }) => {
   const updateBills = (newBills) => {
     setBills(newBills);
   };
+  const updateSnapTransaction = (snapTr) => {
+    setSnapTransaction(snapTr);
+  };
+  const updateHasFilter = (filter) => {
+    setHasFilter(filter);
+  };
+  const updateFilters = (filter) => {
+    setFilters(filter);
+  };
 
   return (
     <DataContext.Provider
       value={{
+        filters,
+        hasFilter,
         homeTransactions,
         bills,
         balance,
@@ -174,6 +227,10 @@ export const DataContextProvider = ({ children }) => {
         updateTransactions,
         updateHomeTransactions,
         updateBalance,
+        snapTransaction,
+        updateSnapTransaction,
+        updateHasFilter,
+        updateFilters,
       }}
     >
       {children}

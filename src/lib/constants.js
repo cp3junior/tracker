@@ -13,6 +13,8 @@ export const CATEGORIES_KEY = "vola-categories";
 export const CONNECT_KEY = "vola-user-connected";
 export const DATE_KEY = "vola-date-stamp";
 
+export const LIMIT_DATA = 20;
+
 export const categoryColors = [
   "#55efc4",
   "#81ecec",
@@ -38,6 +40,18 @@ export const transactionTypes = [
     id: 2,
     label: "Expense",
     value: "out",
+  },
+];
+export const orderTypes = [
+  {
+    id: 1,
+    label: "Ascending",
+    value: "asc",
+  },
+  {
+    id: 2,
+    label: "Descending",
+    value: "desc",
   },
 ];
 

@@ -8,8 +8,10 @@ import {
   where,
   setDoc,
   getDoc,
+  startAfter,
 } from "firebase/firestore";
 import moment from "moment";
+import { LIMIT_DATA } from "../lib/constants";
 import { getDataFromSnapshot } from "../lib/functions";
 import { db } from "./firebase";
 
@@ -90,21 +92,79 @@ export const getTransactionsMonth = async () => {
   }
   return [];
 };
-export const getTransactionsPage = async (order = "desc") => {
-  const q = query(transactionsCollection, orderBy("date", order), limit(30));
-  const transactionSnapshot = await getDocs(q);
-  if (!transactionSnapshot.empty) {
-    return getDataFromSnapshot(transactionSnapshot);
+export const getTransactionsPage = async (paginate = null) => {
+  const queryConstraints = [];
+
+  if (paginate) {
+    const lastVisible = paginate.docs[paginate.docs.length - 1];
+    queryConstraints.push(startAfter(lastVisible));
   }
-  return [];
+
+  const q = query(
+    transactionsCollection,
+    orderBy("date", "desc"),
+    ...queryConstraints,
+    limit(LIMIT_DATA)
+  );
+  return await getDocs(q);
 };
-export const getTransactionsHome = async () => {
-  const q = query(transactionsCollection, orderBy("date", "desc"), limit(10));
-  const transactionSnapshot = await getDocs(q);
-  if (!transactionSnapshot.empty) {
-    return getDataFromSnapshot(transactionSnapshot);
+
+export const getTransactionsFiltered = async (
+  order = "desc",
+  category = "",
+  period = "all",
+  paginate = null
+) => {
+  const queryConstraints = [];
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const month = moment(today).get("month") + 1;
+  const lastMonth = month === 1 ? 12 : month - 1;
+  let year = moment(today).get("year");
+
+  if (category) {
+    queryConstraints.push(where("category", "==", category));
   }
-  return [];
+
+  if (period === "today") {
+    queryConstraints.push(where("date", ">", today));
+  }
+  if (period === "thismonth") {
+    const endDate = moment(today).clone().endOf("month").format("MM DD YYYY");
+
+    const start = new Date(`${month} 01 ${year}`);
+    const end = new Date(endDate);
+
+    queryConstraints.push(where("date", ">", start));
+    queryConstraints.push(where("date", "<", end));
+  }
+  if (period === "lastmonth") {
+    const lastMonthDate = `${lastMonth} 01 ${year}`;
+    const endDate = moment(new Date(lastMonthDate))
+      .clone()
+      .endOf("month")
+      .format("MM DD YYYY");
+
+    const start = new Date(lastMonthDate);
+    const end = new Date(endDate);
+
+    queryConstraints.push(where("date", ">", start));
+    queryConstraints.push(where("date", "<", end));
+  }
+
+  queryConstraints.push(orderBy("date", order));
+
+  if (paginate) {
+    const lastVisible = paginate.docs[paginate.docs.length - 1];
+    queryConstraints.push(startAfter(lastVisible));
+  }
+
+  const q = query(
+    transactionsCollection,
+    ...queryConstraints,
+    limit(LIMIT_DATA)
+  );
+  return await getDocs(q);
 };
 
 export const getBills = async () => {

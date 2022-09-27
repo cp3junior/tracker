@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import DataContext from "../context/DataContext";
 import { ReactComponent as AddIcon } from "../assets/icons/add.svg";
 import AddCategory from "./AddCategory";
-import { categoryColors, transactionTypes } from "../lib/constants";
+import { categoryColors, transactionTypes, orderTypes } from "../lib/constants";
 import { ReactComponent as ArrowIcon } from "../assets/icons/arrow.svg";
 
 const FormItem = ({ data, formData = {}, onChange = () => {} }) => {
@@ -16,6 +16,8 @@ const FormItem = ({ data, formData = {}, onChange = () => {} }) => {
     label = "",
     input = "input",
     required = false,
+    canAdd = true,
+    items = [],
     onSelect = () => {},
   } = data || {};
 
@@ -60,6 +62,23 @@ const FormItem = ({ data, formData = {}, onChange = () => {} }) => {
           rows="3"
         />
       )}
+      {input === "select" && (
+        <div className="form-item-category">
+          <select
+            name={name}
+            id={name}
+            value={formData?.[name] || ""}
+            onChange={onChange}
+            required={required}
+          >
+            {items.map((item) => (
+              <option key={item.id} value={item.value}>
+                {item.label}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {input === "category" && (
         <div className="form-item-category">
@@ -85,13 +104,15 @@ const FormItem = ({ data, formData = {}, onChange = () => {} }) => {
               <option value="">No category</option>
             )}
           </select>
-          <button
-            type="button"
-            className="form-item-category-addbtn"
-            onClick={showAdd}
-          >
-            <AddIcon />
-          </button>
+          {canAdd && (
+            <button
+              type="button"
+              className="form-item-category-addbtn"
+              onClick={showAdd}
+            >
+              <AddIcon />
+            </button>
+          )}
           {showAddCategory && <AddCategory onClose={hideAdd} />}
         </div>
       )}
@@ -118,6 +139,23 @@ const FormItem = ({ data, formData = {}, onChange = () => {} }) => {
               onClick={() => handleSelect(typ.value)}
               key={typ.id}
               className={`typesform-item ${
+                (formData?.[name] || "") === typ.value ? "selected" : ""
+              } ${typ.value}`}
+            >
+              <ArrowIcon />
+              <p>{typ.label}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {input === "order" && (
+        <div className="orderform">
+          {orderTypes.map((typ) => (
+            <div
+              onClick={() => handleSelect(typ.value)}
+              key={typ.id}
+              className={`orderform-item ${
                 (formData?.[name] || "") === typ.value ? "selected" : ""
               } ${typ.value}`}
             >

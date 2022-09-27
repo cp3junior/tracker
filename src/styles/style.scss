@@ -2,6 +2,26 @@
 @import "./variables";
 @import "./reset";
 
+.fallback {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 80vh;
+  &-div {
+    background-color: $yellow;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+    border: 15px solid $bg-green;
+  }
+  p {
+    font-size: 15px;
+    color: rgba(0, 0, 0, 0.5);
+  }
+}
+
 .app {
   max-width: $max;
   flex: 1;
@@ -77,25 +97,7 @@
       height: 50px;
     }
   }
-  .fallback {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    height: 80vh;
-    &-div {
-      background-color: $yellow;
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      margin-bottom: 15px;
-      border: 15px solid $bg-green;
-    }
-    p {
-      font-size: 15px;
-      color: rgba(0, 0, 0, 0.5);
-    }
-  }
+
   .loadingContainer {
     display: flex;
     align-items: center;
@@ -103,7 +105,7 @@
     flex: 1;
   }
   .nodata {
-    margin: 10px 0;
+    margin: 15px 0;
     p {
       text-align: center;
       text-transform: uppercase;
@@ -130,6 +132,7 @@
     right: 0;
     left: 0;
     background-color: #00000075;
+    height: 100vh;
   }
   .addcategory {
     position: fixed;

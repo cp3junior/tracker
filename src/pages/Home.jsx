@@ -1,12 +1,11 @@
 import moment from "moment";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import { Link } from "react-router-dom";
 import HomeCards from "../components/HomeCards";
 import HomeIntro from "../components/HomeIntro";
 import Loader from "../components/Loader";
 import TransactionItem from "../components/TransactionItem";
 import DataContext from "../context/DataContext";
-import { getTransactionsMonth } from "../db/collections";
 import { monthMap } from "../lib/constants";
 
 // const today = new Date("06 22 2022");
@@ -15,23 +14,9 @@ const monthIndex = moment(today).get("month");
 const month = monthMap[monthIndex];
 
 const Home = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading] = useState(false);
 
-  const { homeTransactions, updateHomeTransactions } = useContext(DataContext);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-
-      const data = await getTransactionsMonth();
-      if (data.length > 0) {
-        updateHomeTransactions(data);
-      }
-      setIsLoading(false);
-    };
-
-    if (homeTransactions.length === 0) fetchData();
-  }, [homeTransactions, updateHomeTransactions]);
+  const { homeTransactions } = useContext(DataContext);
 
   return (
     <div className="page green">
