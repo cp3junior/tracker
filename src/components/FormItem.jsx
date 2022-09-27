@@ -2,7 +2,8 @@ import { useContext, useState } from "react";
 import DataContext from "../context/DataContext";
 import { ReactComponent as AddIcon } from "../assets/icons/add.svg";
 import AddCategory from "./AddCategory";
-import { categoryColors } from "../lib/constants";
+import { categoryColors, transactionTypes } from "../lib/constants";
+import { ReactComponent as ArrowIcon } from "../assets/icons/arrow.svg";
 
 const FormItem = ({ data, formData = {}, onChange = () => {} }) => {
   const [showAddCategory, setShowAddCategory] = useState(false);
@@ -27,8 +28,8 @@ const FormItem = ({ data, formData = {}, onChange = () => {} }) => {
     setShowAddCategory(false);
   };
 
-  const handleSelect = (color) => {
-    if (onSelect) onSelect(color);
+  const handleSelect = (value) => {
+    if (onSelect) onSelect(value);
   };
 
   return (
@@ -106,6 +107,23 @@ const FormItem = ({ data, formData = {}, onChange = () => {} }) => {
               }`}
               style={{ backgroundColor: col }}
             />
+          ))}
+        </div>
+      )}
+
+      {input === "types" && (
+        <div className="typesform">
+          {transactionTypes.map((typ) => (
+            <div
+              onClick={() => handleSelect(typ.value)}
+              key={typ.id}
+              className={`typesform-item ${
+                (formData?.[name] || "") === typ.value ? "selected" : ""
+              } ${typ.value}`}
+            >
+              <ArrowIcon />
+              <p>{typ.label}</p>
+            </div>
           ))}
         </div>
       )}

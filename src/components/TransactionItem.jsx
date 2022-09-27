@@ -11,6 +11,8 @@ const TransactionItem = ({
   price = 0,
   hasStatus = false,
   usePayday = false,
+  isTransaction = "",
+  transactionType = "",
   paydate = "",
   status = "",
 }) => {
@@ -28,6 +30,12 @@ const TransactionItem = ({
   const getColor = () => {
     if (category) return getCurrentCategory()?.color || "#ff7b7b";
     return "#ff7b7b";
+  };
+
+  const getPrefix = () => {
+    if (isTransaction && transactionType)
+      return transactionType === "in" ? "+ " : "- ";
+    return "";
   };
 
   return (
@@ -49,8 +57,11 @@ const TransactionItem = ({
           }}
         />
       </div>
-      <div className="transactionItem-price">
-        <h2>{formatNumber(price)} Ar</h2>
+      <div className={`transactionItem-price ${transactionType}`}>
+        <h2>
+          {getPrefix()}
+          {formatNumber(price)} Ar
+        </h2>
         {hasStatus && <p>{status}</p>}
       </div>
     </Link>

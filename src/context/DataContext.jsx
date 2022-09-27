@@ -2,7 +2,8 @@ import { createContext, useState, useEffect } from "react";
 import { getDocs } from "firebase/firestore";
 import { categoriesCollection, usersCollection } from "../db/collections";
 import { getDataFromSnapshot } from "../lib/functions";
-import { CATEGORIES_KEY, USERS_KEY } from "../lib/constants";
+import { CATEGORIES_KEY, USERS_KEY, DATE_KEY } from "../lib/constants";
+import moment from "moment";
 
 const DataContext = createContext({});
 
@@ -11,6 +12,9 @@ export const DataContextProvider = ({ children }) => {
   const [categories, setCategories] = useState([]);
   const [whishlists, setWhishlists] = useState([]);
   const [bills, setBills] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+  const [homeTransactions, setHomeTransactions] = useState([]);
+  const [balance, setBalance] = useState(null);
   const [appLoading, setAppLoading] = useState(false);
 
   useEffect(() => {
@@ -24,6 +28,10 @@ export const DataContextProvider = ({ children }) => {
         window.localStorage.setItem(USERS_KEY, null);
       }
     };
+
+    // set date
+    let dateStamp = window.localStorage.getItem(DATE_KEY);
+    if (!dateStamp) window.localStorage.setItem(DATE_KEY, Date());
 
     const fetchCategories = async () => {
       const categoriesSnapshot = await getDocs(categoriesCollection);
@@ -56,17 +64,27 @@ export const DataContextProvider = ({ children }) => {
       }
     }
     if (categories.length === 0) {
-      const localCategoriesString = window.localStorage.getItem(CATEGORIES_KEY);
+      dateStamp = window.localStorage.getItem(DATE_KEY);
 
-      try {
-        const localCategories = JSON.parse(localCategoriesString);
-        if (localCategories) {
-          setCategories(localCategories);
-        } else {
+      const diff =
+        moment().diff(moment(new Date(dateStamp || "")), "hour") || 0;
+      if (diff > 6) {
+        window.localStorage.setItem(DATE_KEY, Date());
+        fetchCategories();
+      } else {
+        const localCategoriesString =
+          window.localStorage.getItem(CATEGORIES_KEY);
+
+        try {
+          const localCategories = JSON.parse(localCategoriesString);
+          if (localCategories) {
+            setCategories(localCategories);
+          } else {
+            fetchCategories();
+          }
+        } catch {
           fetchCategories();
         }
-      } catch {
-        fetchCategories();
       }
     }
     setAppLoading(false);
@@ -121,6 +139,15 @@ export const DataContextProvider = ({ children }) => {
   const updateWhishlists = (newWishlist) => {
     setWhishlists(newWishlist);
   };
+  const updateTransactions = (newTransactions) => {
+    setTransactions(newTransactions);
+  };
+  const updateHomeTransactions = (newTransactions) => {
+    setHomeTransactions(newTransactions);
+  };
+  const updateBalance = (newBalance) => {
+    setBalance(newBalance);
+  };
   const updateBills = (newBills) => {
     setBills(newBills);
   };
@@ -128,9 +155,12 @@ export const DataContextProvider = ({ children }) => {
   return (
     <DataContext.Provider
       value={{
+        homeTransactions,
         bills,
+        balance,
         whishlists,
         users,
+        transactions,
         categories,
         addUser,
         addCategory,
@@ -141,6 +171,9 @@ export const DataContextProvider = ({ children }) => {
         appLoading,
         updateWhishlists,
         updateBills,
+        updateTransactions,
+        updateHomeTransactions,
+        updateBalance,
       }}
     >
       {children}

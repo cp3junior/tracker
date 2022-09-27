@@ -1,12 +1,16 @@
 import moment from "moment";
 
 export const getFormatedDate = (date) => {
-  if (date) return moment(new Date(date)).format("DD MMMM YYYY");
+  if (date)
+    return moment(date?.toDate?.() || new Date(date)).format("DD MMMM YYYY");
   return "";
 };
 
 export const getFormatedDateTime = (date) => {
-  if (date) return moment(new Date(date)).format("DD MMMM YYYY - HH:mm");
+  if (date)
+    return moment(date?.toDate?.() || new Date(date)).format(
+      "DD MMMM YYYY - HH:mm"
+    );
   return "";
 };
 

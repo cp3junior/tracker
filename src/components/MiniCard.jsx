@@ -1,7 +1,7 @@
 import { ReactComponent as ArrowIcon } from "../assets/icons/arrow.svg";
 import { formatNumber } from "../lib/functions";
 
-const MiniCard = ({ title = "", price = "", effect = "", direction = "" }) => {
+const MiniCard = ({ title = "", price = 0, effect = "", direction = "" }) => {
   return (
     <div className={`homecard-small-mini ${effect}`}>
       <div className={`homecard-small-mini-icon ${direction}`}>

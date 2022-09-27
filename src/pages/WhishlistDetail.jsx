@@ -1,10 +1,11 @@
-import { getDoc } from "firebase/firestore";
+import { deleteDoc, getDoc } from "firebase/firestore";
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import DataContext from "../context/DataContext";
 import { getWhishlistRef } from "../db/collections";
 import { ReactComponent as ArrowIcon } from "../assets/icons/arrow.svg";
+import { ReactComponent as TrashIcon } from "../assets/icons/trash.svg";
 import {
   formatNumber,
   getFormatedDateTime,
@@ -14,8 +15,9 @@ import {
 const WhishlistDetail = () => {
   const [whishlist, setWhishlist] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const { whishlists, categories } = useContext(DataContext);
+  const { whishlists, updateWhishlists, categories } = useContext(DataContext);
   const navigate = useNavigate();
 
   const { id } = useParams();
@@ -45,6 +47,38 @@ const WhishlistDetail = () => {
       fetchData();
     }
   }, [id, whishlists, navigate]);
+
+  const addTransaction = (e) => {
+    e.preventDefault();
+    const dataTransaction = {
+      type: "out",
+      title: whishlist?.title || "",
+      price: whishlist?.price || "",
+      category: whishlist?.category || "",
+      description: whishlist?.description || "",
+      whishlist: id || "",
+    };
+
+    navigate("/transaction/add", { state: dataTransaction });
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    setIsDeleting(true);
+
+    try {
+      const currentWhishlistRef = await getWhishlistRef(id);
+      await deleteDoc(currentWhishlistRef);
+
+      const newWishlist = whishlists.filter((whs) => whs.id !== id);
+      updateWhishlists(newWishlist);
+      navigate("/whishlist");
+    } catch (e) {
+      setIsDeleting(false);
+      alert("An error occured!");
+      console.error("Error adding document: ", e);
+    }
+  };
 
   const category = categories.find((cate) => cate.id === whishlist?.category);
 
@@ -110,9 +144,18 @@ const WhishlistDetail = () => {
             <p className="itemdetail-created">
               Created by: {whishlist?.user?.username}
             </p>
-            <button type="button" className="itemdetail-buy">
+            <button
+              onClick={addTransaction}
+              type="button"
+              className="itemdetail-buy"
+            >
               Get Item
             </button>
+            <div className="itemdetail-delete">
+              <button type="button" onClick={handleDelete}>
+                {isDeleting ? <Loader size="small" /> : <TrashIcon />}
+              </button>
+            </div>
           </div>
         )}
       </div>

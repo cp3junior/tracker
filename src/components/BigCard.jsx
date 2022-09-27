@@ -9,7 +9,7 @@ const BigCard = ({ link = "", title = "", price = "0", color = "" }) => {
         <p>{title}</p>
         <h2>{formatNumber(price)} Ar</h2>
       </div>
-      {link && <Link to={link}>See details</Link>}
+      {link && <Link to={link}>See transactions</Link>}
       <div className="homecard-big-illustration">
         <FlowerIcon />
       </div>

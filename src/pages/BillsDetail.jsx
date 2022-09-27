@@ -1,9 +1,10 @@
-import { getDoc } from "firebase/firestore";
+import { deleteDoc, getDoc } from "firebase/firestore";
 import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Loader from "../components/Loader";
 import DataContext from "../context/DataContext";
 import { ReactComponent as ArrowIcon } from "../assets/icons/arrow.svg";
+import { ReactComponent as TrashIcon } from "../assets/icons/trash.svg";
 import {
   formatNumber,
   getFormatedDateTime,
@@ -15,8 +16,9 @@ import { getBillRef } from "../db/collections";
 const BillsDetail = () => {
   const [bill, setBill] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const { bills, categories } = useContext(DataContext);
+  const { bills, updateBills, categories } = useContext(DataContext);
   const navigate = useNavigate();
 
   const { id } = useParams();
@@ -46,6 +48,37 @@ const BillsDetail = () => {
       fetchData();
     }
   }, [id, bills, navigate]);
+
+  const addTransaction = (e) => {
+    e.preventDefault();
+    const dataTransaction = {
+      type: "out",
+      title: bill?.title || "",
+      price: bill?.price || "",
+      category: bill?.category || "",
+      description: bill?.description || "",
+    };
+
+    navigate("/transaction/add", { state: dataTransaction });
+  };
+
+  const handleDelete = async (e) => {
+    e.preventDefault();
+    setIsDeleting(true);
+
+    try {
+      const currentBillRef = await getBillRef(id);
+      await deleteDoc(currentBillRef);
+
+      const newBills = bills.filter((bll) => bll.id !== id);
+      updateBills(newBills);
+      navigate("/bill");
+    } catch (e) {
+      setIsDeleting(false);
+      alert("An error occured!");
+      console.error("Error deleting document: ", e);
+    }
+  };
 
   const category = categories.find((cate) => cate.id === bill?.category);
 
@@ -116,9 +149,18 @@ const BillsDetail = () => {
             <p className="itemdetail-created">
               Created by: {bill?.user?.username}
             </p>
-            <button type="button" className="itemdetail-buy">
+            <button
+              onClick={addTransaction}
+              type="button"
+              className="itemdetail-buy"
+            >
               Pay Bill
             </button>
+            <div className="itemdetail-delete">
+              <button type="button" onClick={handleDelete}>
+                {isDeleting ? <Loader size="small" /> : <TrashIcon />}
+              </button>
+            </div>
           </div>
         )}
       </div>

@@ -143,36 +143,6 @@
     width: 300px;
   }
 
-  .categorycolors {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-
-    &-item {
-      width: 50px;
-      height: 35px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: 1px solid transparent;
-      cursor: pointer;
-
-      &.selected {
-        border-color: $bg-black;
-        position: relative;
-        overflow: hidden;
-        &::before {
-          content: "";
-          position: absolute;
-          width: 20px;
-          height: 20px;
-          top: -8px;
-          right: -8px;
-          border-radius: 50%;
-          background-color: $bg-black;
-        }
-      }
-    }
-  }
   .detailheader {
     &-top {
       display: flex;
@@ -316,6 +286,25 @@
       font-size: 16px;
       padding: 7px 0;
       font-weight: 600;
+    }
+    &-delete {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 30px;
+      button {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        padding: 15px;
+        border-radius: 50%;
+        background-color: #f05757;
+        width: 56px;
+        height: 56px;
+
+        svg {
+          fill: $white;
+        }
+      }
     }
   }
 }

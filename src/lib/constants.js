@@ -6,11 +6,12 @@ export const cardRadius = "25px";
 export const passcodeNumbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
 export const codeNumbers = [1, 2, 3, 4, 5, 6];
 
-export const hasAdd = ["/"];
+export const hasAdd = ["/", "/transaction"];
 
 export const USERS_KEY = "vola-users";
 export const CATEGORIES_KEY = "vola-categories";
 export const CONNECT_KEY = "vola-user-connected";
+export const DATE_KEY = "vola-date-stamp";
 
 export const categoryColors = [
   "#55efc4",
@@ -25,4 +26,32 @@ export const categoryColors = [
   "#fab1a0",
   "#ff7675",
   "#fd79a8",
+];
+
+export const transactionTypes = [
+  {
+    id: 1,
+    label: "Income",
+    value: "in",
+  },
+  {
+    id: 2,
+    label: "Expense",
+    value: "out",
+  },
+];
+
+export const monthMap = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "Mai",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];

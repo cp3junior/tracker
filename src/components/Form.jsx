@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import FormItem from "./FormItem";
 import Loader from "./Loader";
 
@@ -11,10 +11,17 @@ const Form = ({
   isSubmiting = false,
   isEditing = false,
   hasReturn = false,
-  returnLink = "",
+  canDelete = true,
   sizeDelete = "",
   onDelete = () => {},
 }) => {
+  const navigate = useNavigate();
+
+  const goBack = (e) => {
+    e.preventDefault();
+    navigate(-1);
+  };
+
   return (
     <form className="form" onSubmit={onSubmit}>
       {formShape.map((form) => (
@@ -30,11 +37,11 @@ const Form = ({
       </button>
       <div className="form-buttons">
         {hasReturn && (
-          <Link className="form-buttons-back" to={returnLink}>
+          <button onClick={goBack} type="button" className="form-buttons-back">
             Cancel
-          </Link>
+          </button>
         )}
-        {isEditing && (
+        {isEditing && canDelete && (
           <button
             type="button"
             className={`form-buttons-delete ${sizeDelete}`}

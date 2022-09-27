@@ -1,4 +1,10 @@
-import { addDoc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  deleteDoc,
+  getDoc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Form from "../components/Form";
@@ -137,7 +143,7 @@ const BillsManage = () => {
       }
     } else {
       try {
-        formData.date = Date();
+        formData.date = Timestamp.fromDate(new Date());
         formData.user = userConnected;
 
         const billRef = await addDoc(billsCollection, formData);

@@ -74,6 +74,104 @@
         }
       }
     }
+
+    .categorycolors {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+
+      &-item {
+        width: 50px;
+        height: 35px;
+        margin-bottom: 10px;
+        border-radius: 5px;
+        border: 1px solid transparent;
+        cursor: pointer;
+
+        &.selected {
+          border-color: $bg-black;
+          position: relative;
+          overflow: hidden;
+          &::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: -8px;
+            right: -8px;
+            border-radius: 50%;
+            background-color: $bg-black;
+          }
+        }
+      }
+    }
+
+    .typesform {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 10px;
+
+      &-item {
+        flex: 1;
+        min-height: 50px;
+        border-radius: 5px;
+        border: 2px solid transparent;
+        cursor: pointer;
+        background-color: $bg-black;
+        display: flex;
+        align-items: center;
+        padding: 15px;
+
+        svg {
+          margin-right: 10px;
+          width: 40px;
+        }
+
+        p {
+          color: $white;
+          font-size: 16px;
+          font-weight: 600;
+          width: 100%;
+          text-align: right;
+          margin-right: 15px;
+        }
+
+        &.selected {
+          border-color: $blue;
+          position: relative;
+          overflow: hidden;
+          &::before {
+            content: "";
+            position: absolute;
+            width: 26px;
+            height: 26px;
+            top: -10px;
+            right: -10px;
+            border-radius: 50%;
+            background-color: $blue;
+          }
+        }
+
+        &.out {
+          justify-content: flex-end;
+          svg {
+            order: 2;
+            margin-right: 0;
+            margin-left: 10px;
+            transform: rotate(180deg);
+            path {
+              stroke: $vividred;
+            }
+          }
+          p {
+            text-align: left;
+            margin-right: 0;
+            margin-left: 15px;
+          }
+        }
+      }
+    }
   }
   &-submit {
     background-color: $blue;

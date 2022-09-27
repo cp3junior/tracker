@@ -16,6 +16,7 @@ const WhishlistDetail = lazy(() => import("./pages/WhishlistDetail"));
 const WhishlistManage = lazy(() => import("./pages/WhishlistManage"));
 const Transactions = lazy(() => import("./pages/Transactions"));
 const TransactionsDetail = lazy(() => import("./pages/TransactionsDetail"));
+const TransactionsManage = lazy(() => import("./pages/TransactionsManage"));
 const User = lazy(() => import("./pages/User"));
 
 const App = () => {
@@ -93,10 +94,18 @@ const App = () => {
             }
           />
           <Route
-            path="transaction/:id"
+            path="transaction/:id/view"
             element={
               <Suspense fallback={<FallBack />}>
                 <TransactionsDetail />
+              </Suspense>
+            }
+          />
+          <Route
+            path="transaction/:id"
+            element={
+              <Suspense fallback={<FallBack />}>
+                <TransactionsManage />
               </Suspense>
             }
           />

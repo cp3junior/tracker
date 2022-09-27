@@ -1,4 +1,10 @@
-import { addDoc, deleteDoc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  addDoc,
+  deleteDoc,
+  getDoc,
+  Timestamp,
+  updateDoc,
+} from "firebase/firestore";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Form from "../components/Form";
@@ -104,7 +110,6 @@ const WhishlistManage = () => {
       try {
         const currentWhishlistRef = await getWhishlistRef(id);
         await updateDoc(currentWhishlistRef, formData);
-        setIsSubmiting(false);
         const newWishlist = whishlists.map((whs) => {
           if (whs.id === id) return { ...whs, ...formData };
           return whs;
@@ -118,11 +123,10 @@ const WhishlistManage = () => {
       }
     } else {
       try {
-        formData.date = Date();
+        formData.date = Timestamp.fromDate(new Date());
         formData.user = userConnected;
 
         const whishlistRef = await addDoc(whishlistsCollection, formData);
-        setIsSubmiting(false);
         const newWishlist = [
           ...whishlists,
           { id: whishlistRef.id, ...formData },
@@ -149,7 +153,6 @@ const WhishlistManage = () => {
     try {
       const currentWhishlistRef = await getWhishlistRef(id);
       await deleteDoc(currentWhishlistRef);
-      setIsSubmiting(false);
 
       const newWishlist = whishlists.filter((whs) => whs.id !== id);
       updateWhishlists(newWishlist);
