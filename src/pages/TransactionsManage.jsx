@@ -69,6 +69,7 @@ const TransactionsManage = () => {
   const [formShape, setFormShape] = useState(defaultFormShape);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmiting, setIsSubmiting] = useState(false);
+  const [currentPrice, setCurrentPrice] = useState(0);
 
   const { userConnected } = useContext(AuthContext);
   const {
@@ -96,6 +97,7 @@ const TransactionsManage = () => {
         const data = transactionSnapshot?.data();
         const refData = transactionSnapshot?.id;
         const tran = { ...data, id: refData };
+        setCurrentPrice(parseInt(tran?.price || 0, 10) || 0);
         setFormData(tran);
         setIsSubmiting(false);
       } else {
@@ -113,14 +115,19 @@ const TransactionsManage = () => {
     setFormShape(newFormShape);
 
     if (id === "add") {
-      if (state) setFormData(state);
+      if (state) {
+        setCurrentPrice(parseInt(state?.price || 0, 10) || 0);
+        setFormData(state);
+      }
 
       setIsEditing(false);
     } else {
       if (transactions.length > 0) {
         const currentTransaction = transactions.find((tran) => tran.id === id);
-        if (currentTransaction) setFormData(currentTransaction);
-        else navigate(`/transaction/${id}/view`);
+        if (currentTransaction) {
+          setCurrentPrice(parseInt(currentTransaction?.price || 0, 10) || 0);
+          setFormData(currentTransaction);
+        } else navigate(`/transaction/${id}/view`);
       } else {
         fetchData();
       }
@@ -162,6 +169,35 @@ const TransactionsManage = () => {
           return tran;
         });
         updateHomeTransactions(newHomeTransactions);
+
+        // Update Balance
+        const oldPrice = parseInt(balance?.price || 0, 10);
+        const thePrice = parseInt(formData?.price || 0, 10);
+        const diff = currentPrice - thePrice;
+        let newPrice = oldPrice;
+
+        // in
+        // 23 - 24 = -1 => balance miampy
+        // 23 - 22 = 1 => balance mihena
+
+        // out
+        // 23 - 24 = -1 => balance mihena
+        // 23 - 22 = 1 => balance miampy
+
+        if (formData.type === "in") {
+          if (diff > 0) newPrice = oldPrice - Math.abs(diff);
+          else newPrice = oldPrice + Math.abs(diff);
+        } else {
+          if (diff > 0) newPrice = oldPrice + Math.abs(diff);
+          else newPrice = oldPrice - Math.abs(diff);
+        }
+
+        const newBalance = { oldPrice, price: newPrice };
+
+        const balanceRef = await getBalanceRef();
+        await updateDoc(balanceRef, newBalance);
+
+        updateBalance(newBalance);
 
         navigate(`/transaction/${id}/view`);
       } catch (e) {
